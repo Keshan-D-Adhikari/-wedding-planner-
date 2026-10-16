@@ -1,0 +1,56 @@
+.shell {
+  min-height: 100dvh;
+}
+
+.main {
+  outline: none;
+  /* Leave room for the fixed bottom bar (+ iPhone home indicator) */
+  padding-bottom: calc(var(--bottom-nav-height) + env(safe-area-inset-bottom) + var(--space-6));
+}
+
+.content {
+  width: 100%;
+  max-width: var(--content-max-width);
+  margin: 0 auto;
+  padding: var(--space-5) var(--space-4) 0;
+}
+
+.skipLink {
+  position: absolute;
+  left: var(--space-4);
+  top: var(--space-4);
+  z-index: var(--z-toast);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  background: var(--primary);
+  color: var(--on-primary);
+  font-weight: 600;
+  text-decoration: none;
+  transform: translateY(-200%);
+  transition: transform var(--duration-base) var(--ease-out);
+}
+
+.skipLink:focus {
+  transform: translateY(0);
+}
+
+@media (min-width: 600px) {
+  .content {
+    padding: var(--space-8) var(--space-6) 0;
+  }
+}
+
+@media (min-width: 900px) {
+  .shell {
+    display: grid;
+    grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
+  }
+
+  .main {
+    padding-bottom: var(--space-12);
+  }
+
+  .content {
+    padding: var(--space-10) var(--space-10) 0;
+  }
+}

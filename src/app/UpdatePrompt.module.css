@@ -1,0 +1,49 @@
+.prompt {
+  position: fixed;
+  top: calc(env(safe-area-inset-top) + var(--space-3));
+  left: 50%;
+  z-index: var(--z-toast);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  width: min(460px, calc(100vw - var(--space-8)));
+  padding: var(--space-2) var(--space-2) var(--space-2) var(--space-4);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  box-shadow: var(--shadow-lg);
+  font-size: var(--text-sm);
+  transform: translateX(-50%);
+  animation: drop var(--duration-slow) var(--ease-out);
+}
+
+.icon {
+  flex-shrink: 0;
+  color: var(--primary);
+}
+
+.text {
+  flex: 1;
+  font-weight: 500;
+}
+
+.close {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  border-radius: var(--radius-full);
+  color: var(--text-muted);
+}
+
+.close:hover {
+  background: var(--primary-soft);
+  color: var(--primary);
+}
+
+@keyframes drop {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -12px);
+  }
+}

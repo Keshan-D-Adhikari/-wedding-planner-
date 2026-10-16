@@ -1,0 +1,131 @@
+.picker {
+  position: relative;
+}
+
+/* Visually hidden, but still focusable — the label below is the visible target. */
+.fileInput {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.dropLabel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+  padding: var(--space-6) var(--space-4);
+  border: 2px dashed color-mix(in srgb, var(--primary) 35%, var(--border));
+  border-radius: var(--radius-lg);
+  background: color-mix(in srgb, var(--primary-soft) 40%, var(--surface));
+  color: var(--primary);
+  text-align: center;
+  cursor: pointer;
+  transition:
+    background-color var(--duration-fast) var(--ease-out),
+    border-color var(--duration-fast) var(--ease-out);
+}
+
+.dropLabel:hover {
+  border-color: var(--primary);
+  background: var(--primary-soft);
+}
+
+.fileInput:focus-visible + .dropLabel {
+  box-shadow: var(--focus-ring);
+}
+
+.dropTitle {
+  max-width: 100%;
+  overflow: hidden;
+  color: var(--text);
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dropHint {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
+.error {
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  background: color-mix(in srgb, var(--danger) 10%, var(--surface));
+  color: var(--danger);
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+
+.preview {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.summary {
+  font-size: var(--text-sm);
+}
+
+.columnsLabel {
+  margin-top: var(--space-1);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+}
+
+.chips li {
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-full);
+  background: var(--primary-soft);
+  color: var(--primary);
+  font-size: var(--text-xs);
+  font-weight: 600;
+}
+
+.tableWrap {
+  margin-top: var(--space-2);
+  overflow-x: auto;
+  border-radius: var(--radius-md);
+  background: var(--bg);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-sm);
+}
+
+.table th,
+.table td {
+  padding: var(--space-2) var(--space-3);
+  text-align: left;
+  white-space: nowrap;
+}
+
+.table th {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
+.table tbody tr {
+  border-top: 1px solid var(--border);
+}
+
+.more {
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
+.template {
+  margin-right: auto;
+}

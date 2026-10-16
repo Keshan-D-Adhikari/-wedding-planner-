@@ -1,0 +1,39 @@
+.screen {
+  display: grid;
+  place-items: center;
+  min-height: 100dvh;
+  padding: var(--space-6);
+}
+
+.card {
+  max-width: 460px;
+  padding: var(--space-10) var(--space-8);
+  border-radius: var(--radius-xl);
+  background: var(--surface);
+  box-shadow: var(--shadow-md);
+  text-align: center;
+}
+
+.icon {
+  display: grid;
+  place-items: center;
+  width: 80px;
+  height: 80px;
+  margin: 0 auto var(--space-5);
+  border-radius: var(--radius-full);
+  background: var(--primary-soft);
+  color: var(--primary);
+}
+
+.title {
+  font-size: var(--text-2xl);
+}
+
+.message {
+  margin-top: var(--space-3);
+  color: var(--text-muted);
+}
+
+.action {
+  margin-top: var(--space-6);
+}

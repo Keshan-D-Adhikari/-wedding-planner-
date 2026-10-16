@@ -1,0 +1,134 @@
+.groups {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.group {
+  padding: var(--space-4) var(--space-4) var(--space-2);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+}
+
+.header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding-bottom: var(--space-2);
+}
+
+.category {
+  font-size: var(--text-xl);
+}
+
+.groupTotal {
+  font-weight: 700;
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}
+
+.list > li + li {
+  border-top: 1px solid var(--border);
+}
+
+.row {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  width: 100%;
+  min-height: var(--touch-target);
+  padding: var(--space-3) var(--space-2);
+  margin: 0 calc(var(--space-2) * -1);
+  width: calc(100% + var(--space-4));
+  border-radius: var(--radius-md);
+  text-align: left;
+  transition: background-color var(--duration-fast) var(--ease-out);
+}
+
+.row:hover {
+  background: color-mix(in srgb, var(--primary-soft) 50%, transparent);
+}
+
+.main {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.name {
+  font-weight: 600;
+}
+
+.vendor {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
+.paidBar {
+  height: 4px;
+  margin: var(--space-2) 0 var(--space-1);
+  max-width: 260px;
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-3);
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
+.meta > span {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.overdue {
+  font-weight: 700;
+  color: var(--danger);
+}
+
+.paid {
+  font-weight: 700;
+  color: var(--success);
+}
+
+.amount {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  flex-shrink: 0;
+}
+
+.cost {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.estimate {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
+.chevron {
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: var(--text-muted);
+  opacity: 0.5;
+}
+
+.add {
+  margin: var(--space-1) 0 var(--space-2) calc(var(--space-2) * -1);
+}
+
+@media (min-width: 600px) {
+  .group {
+    padding: var(--space-5) var(--space-6) var(--space-3);
+    border-radius: var(--radius-xl);
+  }
+}

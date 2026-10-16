@@ -1,0 +1,90 @@
+/*
+ * Colour themes. Switched with <html data-theme="...">.
+ * Every --primary is dark enough for white text at WCAG AA (4.5:1),
+ * and --text-muted passes AA on both --bg and --surface.
+ */
+
+:root,
+[data-theme='blush'] {
+  --primary: #a64d63;
+  --primary-soft: #f7e6ea;
+  --accent: #c59a74;
+  --bg: #fcf8f7;
+  --surface: #ffffff;
+  --text: #3a2a2f;
+  --text-muted: #77636a;
+  --border: #efe2e5;
+  --success: #376b48;
+  --warning: #9a6512;
+  --danger: #b03a3a;
+}
+
+[data-theme='sage'] {
+  --primary: #557459;
+  --primary-soft: #e6ede4;
+  --accent: #b9965f;
+  --bg: #f7f8f4;
+  --surface: #ffffff;
+  --text: #2c3a2f;
+  --text-muted: #626d60;
+  --border: #e2e7de;
+  --success: #376b48;
+  --warning: #9a6512;
+  --danger: #b03a3a;
+}
+
+[data-theme='navy'] {
+  --primary: #1f3a5f;
+  --primary-soft: #e4eaf3;
+  --accent: #b08d43;
+  --bg: #f7f7f3;
+  --surface: #ffffff;
+  --text: #1c2633;
+  --text-muted: #5b6575;
+  --border: #e3e5e8;
+  --success: #376b48;
+  --warning: #9a6512;
+  --danger: #b03a3a;
+}
+
+[data-theme='terracotta'] {
+  --primary: #a44c30;
+  --primary-soft: #f7e5dc;
+  --accent: #cf9b52;
+  --bg: #fcf7f3;
+  --surface: #ffffff;
+  --text: #3b2a23;
+  --text-muted: #775f55;
+  --border: #f0e2da;
+  --success: #376b48;
+  --warning: #9a6512;
+  --danger: #b03a3a;
+}
+
+[data-theme='lavender'] {
+  --primary: #765a9b;
+  --primary-soft: #eee8f6;
+  --accent: #c497b2;
+  --bg: #faf8fc;
+  --surface: #ffffff;
+  --text: #2f2838;
+  --text-muted: #6b6177;
+  --border: #e9e4ef;
+  --success: #376b48;
+  --warning: #9a6512;
+  --danger: #b03a3a;
+}
+
+[data-theme='classic'] {
+  --primary: #1f1f1f;
+  --primary-soft: #efebe3;
+  --accent: #b0924f;
+  --bg: #fbf8f1;
+  --surface: #ffffff;
+  --text: #1a1a1a;
+  --text-muted: #625d56;
+  --border: #e8e3d8;
+  --success: #376b48;
+  --warning: #9a6512;
+  --danger: #b03a3a;
+}

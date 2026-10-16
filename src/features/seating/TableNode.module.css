@@ -1,0 +1,121 @@
+/*
+ * Sizes here are in "room units" (the plane is scaled). Text uses
+ * max(… , Npx / var(--scale)) so it never renders smaller than N screen pixels.
+ */
+.table {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding: 12px;
+  border: 2px solid color-mix(in srgb, var(--primary) 30%, var(--border));
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+  color: var(--text);
+  cursor: grab;
+  touch-action: none; /* lets touch drags move the table instead of scrolling */
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    box-shadow var(--duration-base) var(--ease-out),
+    border-color var(--duration-base) var(--ease-out),
+    background-color var(--duration-base) var(--ease-out),
+    opacity var(--duration-base) var(--ease-out);
+}
+
+.round {
+  border-radius: 50%;
+}
+
+.rectangle {
+  border-radius: 18px;
+}
+
+.table:focus-visible {
+  outline: none;
+  box-shadow:
+    0 0 0 calc(4px / var(--scale)) color-mix(in srgb, var(--primary) 45%, transparent),
+    var(--shadow-md);
+}
+
+.selected {
+  border-color: var(--primary);
+  background: var(--primary-soft);
+  box-shadow: var(--shadow-md);
+}
+
+.dragging {
+  z-index: 10;
+  cursor: grabbing;
+  box-shadow: var(--shadow-lg);
+  transition: none;
+}
+
+/* While a guest is being placed */
+.canDrop {
+  border-style: dashed;
+  border-color: var(--success);
+}
+
+.cannotDrop {
+  opacity: 0.45;
+}
+
+.over {
+  border-style: solid;
+  background: color-mix(in srgb, var(--success) 14%, var(--surface));
+  box-shadow: 0 0 0 6px color-mix(in srgb, var(--success) 25%, transparent);
+}
+
+.overFull {
+  opacity: 1;
+  border-color: var(--danger);
+  background: color-mix(in srgb, var(--danger) 10%, var(--surface));
+}
+
+.name {
+  max-width: 100%;
+  overflow: hidden;
+  font-family: var(--font-display);
+  font-size: max(20px, calc(12px / var(--scale)));
+  font-weight: 600;
+  line-height: 1.1;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.count {
+  font-size: max(15px, calc(11px / var(--scale)));
+  font-weight: 700;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.countFull {
+  color: var(--success);
+}
+
+/* Seat dots around the edge */
+.seats {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.seat {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border: 2px solid color-mix(in srgb, var(--primary) 35%, var(--border));
+  border-radius: 50%;
+  background: var(--surface);
+  transform: translate(-50%, -50%);
+}
+
+.seatTaken {
+  border-color: var(--primary);
+  background: var(--primary);
+}

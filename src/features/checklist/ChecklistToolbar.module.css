@@ -1,0 +1,39 @@
+.toolbar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.status {
+  width: 100%;
+}
+
+.row {
+  display: flex;
+  gap: var(--space-3);
+}
+
+.search {
+  flex: 1;
+  min-width: 0;
+}
+
+.category {
+  flex: 0 1 180px;
+  min-width: 0;
+}
+
+@media (min-width: 760px) {
+  .toolbar {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .status {
+    width: auto;
+  }
+
+  .row {
+    flex: 1;
+  }
+}

@@ -1,0 +1,64 @@
+.wrap {
+  position: relative;
+  min-width: 0;
+}
+
+.viewport {
+  max-height: 70dvh;
+  overflow: auto;
+  overscroll-behavior: contain;
+  border-radius: var(--radius-xl);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+}
+
+.plane {
+  position: relative;
+  transform-origin: 0 0;
+  /* A soft dotted floor so the room reads as a space */
+  background-color: color-mix(in srgb, var(--primary-soft) 30%, var(--surface));
+  background-image: radial-gradient(
+    color-mix(in srgb, var(--primary) 18%, transparent) 1.5px,
+    transparent 1.5px
+  );
+  background-size: 40px 40px;
+}
+
+.zoom {
+  position: absolute;
+  right: var(--space-3);
+  bottom: var(--space-3);
+  display: flex;
+  gap: 2px;
+  padding: 4px;
+  border-radius: var(--radius-full);
+  background: color-mix(in srgb, var(--surface) 92%, transparent);
+  box-shadow: var(--shadow-md);
+}
+
+.zoomButton {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-full);
+  color: var(--text);
+  transition: background-color var(--duration-fast) var(--ease-out);
+}
+
+.zoomButton:hover:not(:disabled) {
+  background: var(--primary-soft);
+  color: var(--primary);
+}
+
+.zoomButton:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+@media (min-width: 900px) {
+  .viewport {
+    max-height: calc(100dvh - 260px);
+    min-height: 420px;
+  }
+}

@@ -1,0 +1,91 @@
+.button {
+  max-width: 100%;
+  border-radius: var(--radius-full);
+  touch-action: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.button:focus-visible {
+  outline: none;
+}
+
+.button:focus-visible .chip {
+  box-shadow: var(--focus-ring);
+}
+
+.dragging {
+  opacity: 0.35;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  max-width: 100%;
+  min-height: 40px;
+  padding: 0 var(--space-3) 0 var(--space-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background: var(--surface);
+  color: var(--text);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  cursor: grab;
+  transition:
+    border-color var(--duration-fast) var(--ease-out),
+    background-color var(--duration-fast) var(--ease-out),
+    box-shadow var(--duration-fast) var(--ease-out);
+}
+
+.chip:hover {
+  border-color: color-mix(in srgb, var(--primary) 40%, var(--border));
+}
+
+.selected,
+.selected:hover {
+  border-color: var(--primary);
+  background: var(--primary);
+  color: var(--on-primary);
+}
+
+.overlay {
+  box-shadow: var(--shadow-lg);
+  cursor: grabbing;
+  transform: rotate(-2deg);
+}
+
+.grip {
+  flex-shrink: 0;
+  opacity: 0.45;
+}
+
+.name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.plusOne,
+.pending {
+  flex-shrink: 0;
+  padding: 1px 6px;
+  border-radius: var(--radius-full);
+  font-size: 0.6875rem;
+  font-weight: 700;
+}
+
+.plusOne {
+  background: color-mix(in srgb, var(--accent) 25%, var(--surface));
+  color: var(--text);
+}
+
+.pending {
+  background: color-mix(in srgb, var(--warning) 14%, var(--surface));
+  color: var(--warning);
+}
+
+@media (pointer: coarse) {
+  .chip {
+    min-height: var(--touch-target);
+  }
+}

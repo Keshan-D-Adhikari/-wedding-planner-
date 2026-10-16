@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en" data-theme="blush">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+
+    <title>Wedding Planner — Plan your whole wedding in one beautiful place, free</title>
+    <meta
+      name="description"
+      content="A free, beautiful wedding planner: checklist, budget, guest list, seating chart and Pinterest-ready cards. No sign-up. Your data stays on your device."
+    />
+    <meta name="theme-color" content="#fcf8f7" />
+    <meta name="color-scheme" content="light" />
+
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png" />
+    <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
+    <link rel="canonical" href="%VITE_SITE_URL%" />
+
+    <!-- Installed on a phone's home screen: open full-screen, with this name -->
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="Wedding Planner" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+
+    <!-- Open Graph / social previews. Image URLs must be absolute, so they use
+         VITE_SITE_URL (set in .env locally and by the deploy workflow). -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="%VITE_SITE_URL%" />
+    <meta property="og:title" content="Wedding Planner — plan your whole wedding, free" />
+    <meta
+      property="og:description"
+      content="Checklist, budget, guest list and seating chart in one beautiful place. No sign-up, no paywall — your data stays on your device."
+    />
+    <meta property="og:site_name" content="Wedding Planner" />
+    <meta property="og:image" content="%VITE_SITE_URL%og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="Plan your whole wedding in one beautiful place — checklist, budget, guests, seating."
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="%VITE_SITE_URL%og-image.png" />
+
+    <!-- Apply the saved theme before first paint to avoid a colour flash. -->
+    <script>
+      (function () {
+        try {
+          var t = localStorage.getItem('wp-theme');
+          var allowed = ['blush', 'sage', 'navy', 'terracotta', 'lavender', 'classic'];
+          if (t && allowed.indexOf(t) !== -1) document.documentElement.dataset.theme = t;
+        } catch (e) {
+          /* storage unavailable — keep default theme */
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <noscript>This wedding planner needs JavaScript enabled to work.</noscript>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

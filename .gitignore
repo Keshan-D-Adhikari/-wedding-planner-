@@ -1,0 +1,22 @@
+# Dependencies
+node_modules
+
+# Build output
+dist
+*.tsbuildinfo
+
+# Logs
+*.log
+npm-debug.log*
+
+# Editor / OS
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+Thumbs.db
+
+# Env — .env holds public, non-secret defaults and IS committed.
+# Put anything private in .env.local (never committed).
+.env.local
+.env.*.local
