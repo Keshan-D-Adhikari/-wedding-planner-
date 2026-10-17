@@ -1,5 +1,13 @@
-import Dexie, { type EntityTable } from 'dexie';
-import type { AppMeta, BudgetItem, ChecklistTask, Guest, SeatingTable, Wedding } from '@/types';
+import Dexie, { type EntityTable, type Table } from 'dexie';
+import type {
+  AppMeta,
+  BudgetItem,
+  ChecklistTask,
+  Guest,
+  SeatingTable,
+  Timestamped,
+  Wedding,
+} from '@/types';
 
 export const DB_NAME = 'wedding-planner';
 
@@ -36,3 +44,34 @@ export class WeddingDatabase extends Dexie {
 }
 
 export const db = new WeddingDatabase();
+
+/* ---------- Automatic "last changed" timestamps ----------
+ * Every add/update stamps `updatedAt`, so partner plans can be merged later
+ * (newest change wins) without each save function having to remember it.
+ * While a merge or restore is copying records in, keep their original times.
+ */
+let keepIncomingTimestamps = false;
+
+/** Runs `work` without overwriting `updatedAt` on the records it writes. */
+export async function withOriginalTimestamps<T>(work: () => Promise<T>): Promise<T> {
+  keepIncomingTimestamps = true;
+  try {
+    return await work();
+  } finally {
+    keepIncomingTimestamps = false;
+  }
+}
+
+function stampChanges(table: Table<Timestamped, string>) {
+  table.hook('creating', (_key, record) => {
+    if (!keepIncomingTimestamps || record.updatedAt === undefined) record.updatedAt = Date.now();
+  });
+  table.hook('updating', (changes) => {
+    if (keepIncomingTimestamps && 'updatedAt' in changes) return undefined;
+    return { updatedAt: Date.now() };
+  });
+}
+
+for (const table of [db.wedding, db.tasks, db.budgetItems, db.guests, db.seatingTables]) {
+  stampChanges(table);
+}

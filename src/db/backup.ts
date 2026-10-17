@@ -12,7 +12,7 @@ import {
   type SeatingTable,
   type Wedding,
 } from '@/types';
-import { db } from './db';
+import { db, withOriginalTimestamps } from './db';
 
 export const BACKUP_APP_ID = 'wedding-planner';
 export const BACKUP_VERSION = 1;
@@ -88,6 +88,9 @@ function num(v: unknown, field: string): number {
   return v;
 }
 const amount = (v: unknown, field: string) => Math.max(0, num(v, field));
+/** A valid "last changed" time, or undefined (older backups don't have one). */ const stamp = (
+  v: unknown,
+) => (typeof v === 'number' && Number.isFinite(v) && v > 0 ? v : undefined);
 
 function parseWedding(r: Json): Wedding {
   if (!oneOf(CURRENCY_CODES, r.currency)) throw new BackupError('Invalid currency');
@@ -101,6 +104,7 @@ function parseWedding(r: Json): Wedding {
     currency: r.currency,
     theme: oneOf(THEME_NAMES, r.theme) ? r.theme : 'blush',
     createdAt: optStr(r.createdAt, 40) ?? new Date().toISOString(),
+    updatedAt: stamp(r.updatedAt),
   };
 }
 
@@ -115,6 +119,7 @@ function parseTask(r: Json): ChecklistTask {
     completed: r.completed === true,
     isCustom: r.isCustom === true,
     order: typeof r.order === 'number' && Number.isFinite(r.order) ? r.order : 0,
+    updatedAt: stamp(r.updatedAt),
   };
 }
 
@@ -129,6 +134,7 @@ function parseBudgetItem(r: Json): BudgetItem {
     vendorName: optStr(r.vendorName, 200),
     dueDate: optStr(r.dueDate, 10),
     notes: optStr(r.notes, 1000),
+    updatedAt: stamp(r.updatedAt),
   };
 }
 
@@ -145,6 +151,7 @@ function parseGuest(r: Json): Guest {
     phone: optStr(r.phone, 60),
     email: optStr(r.email, 200),
     tableId: optStr(r.tableId, 64) ?? null,
+    updatedAt: stamp(r.updatedAt),
   };
 }
 
@@ -156,6 +163,7 @@ function parseTable(r: Json): SeatingTable {
     capacity: Math.min(30, Math.max(1, Math.round(num(r.capacity, 'table capacity')))),
     x: num(r.x, 'table position'),
     y: num(r.y, 'table position'),
+    updatedAt: stamp(r.updatedAt),
   };
 }
 
@@ -231,29 +239,32 @@ export function parseBackup(text: string): BackupParseResult {
 /** Replaces EVERYTHING in the planner with the backup, in one all-or-nothing transaction. */
 export async function restoreBackup(backup: BackupFile): Promise<void> {
   const { data } = backup;
-  await db.transaction(
-    'rw',
-    [db.wedding, db.tasks, db.budgetItems, db.guests, db.seatingTables, db.meta],
-    async () => {
-      await Promise.all([
-        db.wedding.clear(),
-        db.tasks.clear(),
-        db.budgetItems.clear(),
-        db.guests.clear(),
-        db.seatingTables.clear(),
-        db.meta.clear(),
-      ]);
-      await db.wedding.bulkAdd(data.wedding);
-      await db.tasks.bulkAdd(data.tasks);
-      await db.budgetItems.bulkAdd(data.budgetItems);
-      await db.guests.bulkAdd(data.guests);
-      await db.seatingTables.bulkAdd(data.seatingTables);
-      await db.meta.bulkAdd(data.meta);
-      // The data now matches the backup, so it counts as backed up.
-      await db.meta.put({
-        key: 'lastBackupAt',
-        value: backup.exportedAt || new Date().toISOString(),
-      });
-    },
+  // Keep each record's original "last changed" time so later partner merges stay correct.
+  await withOriginalTimestamps(() =>
+    db.transaction(
+      'rw',
+      [db.wedding, db.tasks, db.budgetItems, db.guests, db.seatingTables, db.meta],
+      async () => {
+        await Promise.all([
+          db.wedding.clear(),
+          db.tasks.clear(),
+          db.budgetItems.clear(),
+          db.guests.clear(),
+          db.seatingTables.clear(),
+          db.meta.clear(),
+        ]);
+        await db.wedding.bulkAdd(data.wedding);
+        await db.tasks.bulkAdd(data.tasks);
+        await db.budgetItems.bulkAdd(data.budgetItems);
+        await db.guests.bulkAdd(data.guests);
+        await db.seatingTables.bulkAdd(data.seatingTables);
+        await db.meta.bulkAdd(data.meta);
+        // The data now matches the backup, so it counts as backed up.
+        await db.meta.put({
+          key: 'lastBackupAt',
+          value: backup.exportedAt || new Date().toISOString(),
+        });
+      },
+    ),
   );
 }

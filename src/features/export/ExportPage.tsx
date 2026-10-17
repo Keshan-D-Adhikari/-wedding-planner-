@@ -7,6 +7,7 @@ import { useWedding } from '@/hooks/useWedding';
 import { PRIVACY_NOTE } from '@/utils/constants';
 import { BackupSection } from './BackupSection';
 import styles from './ExportPage.module.css';
+import { PartnerSection } from './PartnerSection';
 import { PdfSection } from './PdfSection';
 import { PinterestSection } from './PinterestSection';
 
@@ -22,6 +23,7 @@ export default function ExportPage() {
 
       <div className={styles.layout}>
         <PinterestSection wedding={wedding} notify={toast.show} />
+        <PartnerSection wedding={wedding} notify={toast.show} />
         <PdfSection notify={toast.show} />
         <BackupSection notify={toast.show} />
 

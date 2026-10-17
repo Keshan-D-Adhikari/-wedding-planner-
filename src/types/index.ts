@@ -55,7 +55,16 @@ export type TableShape = 'round' | 'rectangle';
 
 /* ---------- Data models (one per Dexie table) ---------- */
 
-export interface Wedding {
+/**
+ * Every synced record carries the time it last changed (ms since 1970). It is set
+ * automatically by database hooks (see db.ts) and used to merge a partner's plan:
+ * when both copies changed, the newer one wins.
+ */
+export interface Timestamped {
+  updatedAt?: number;
+}
+
+export interface Wedding extends Timestamped {
   id: string;
   partner1Name: string;
   partner2Name: string;
@@ -69,7 +78,7 @@ export interface Wedding {
   createdAt: string;
 }
 
-export interface ChecklistTask {
+export interface ChecklistTask extends Timestamped {
   id: string;
   title: string;
   notes?: string;
@@ -82,7 +91,7 @@ export interface ChecklistTask {
   order: number;
 }
 
-export interface BudgetItem {
+export interface BudgetItem extends Timestamped {
   id: string;
   /** Usually one of BUDGET_CATEGORIES, but users may type their own. */
   category: string;
@@ -96,7 +105,7 @@ export interface BudgetItem {
   notes?: string;
 }
 
-export interface Guest {
+export interface Guest extends Timestamped {
   id: string;
   name: string;
   side: GuestSide;
@@ -111,7 +120,7 @@ export interface Guest {
   tableId?: string | null;
 }
 
-export interface SeatingTable {
+export interface SeatingTable extends Timestamped {
   id: string;
   /** "Table 1", "Family Table" */
   name: string;

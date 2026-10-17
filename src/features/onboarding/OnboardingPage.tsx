@@ -1,16 +1,18 @@
 import { useEffect, useRef, useState, type ComponentType, type FormEvent } from 'react';
-import { ArrowLeft, ArrowRight, ShieldCheck, Sparkles } from 'lucide-react';
+import { ArrowLeft, ArrowRight, Sparkles } from 'lucide-react';
 import { Navigate, useNavigate } from 'react-router';
 import { BrandMark } from '@/components/BrandMark';
 import { Button } from '@/components/Button';
+import { PrivacyBadges } from '@/components/PrivacyBadges';
 import { PageLoader } from '@/components/PageLoader';
 import { createWedding } from '@/db/wedding';
 import { useTheme } from '@/hooks/useTheme';
 import { useWedding } from '@/hooks/useWedding';
-import { APP_NAME, PRIVACY_NOTE } from '@/utils/constants';
+import { APP_NAME } from '@/utils/constants';
 import { guessCurrency } from '@/utils/currency';
 import styles from './OnboardingPage.module.css';
 import { StepDate } from './StepDate';
+import { ImportPartnerPlan } from './ImportPartnerPlan';
 import { StepIndicator } from './StepIndicator';
 import { StepNames } from './StepNames';
 import { StepStyle } from './StepStyle';
@@ -164,10 +166,9 @@ export default function OnboardingPage() {
         </div>
       </form>
 
-      <p className={styles.privacy}>
-        <ShieldCheck aria-hidden size={16} />
-        {PRIVACY_NOTE} No sign-up, ever.
-      </p>
+      <ImportPartnerPlan onError={setSaveError} />
+
+      <PrivacyBadges />
     </main>
   );
 }

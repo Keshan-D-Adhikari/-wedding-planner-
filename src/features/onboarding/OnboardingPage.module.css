@@ -95,3 +95,30 @@
     transform: translateY(0);
   }
 }
+
+.importBox {
+  position: relative;
+}
+
+.importLink {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: var(--touch-target);
+  padding: 0 var(--space-4);
+  border-radius: var(--radius-full);
+  color: var(--primary);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.importLink:hover {
+  background: var(--primary-soft);
+}
+
+input:focus-visible + .importLink {
+  box-shadow: var(--focus-ring);
+}

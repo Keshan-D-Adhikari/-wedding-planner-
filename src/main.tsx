@@ -8,6 +8,8 @@ import '@fontsource/cormorant-garamond/500-italic.css';
 import '@fontsource-variable/dm-sans';
 
 import './styles/global.css';
+// Listen for the browser's one-time 'can install' event as early as possible.
+import './hooks/useInstallPrompt';
 import { App } from './app/App';
 
 const rootElement = document.getElementById('root');

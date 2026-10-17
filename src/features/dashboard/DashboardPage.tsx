@@ -1,8 +1,8 @@
-import { Armchair, ListChecks, ShieldCheck, Users, Wallet } from 'lucide-react';
+import { Armchair, ListChecks, Users, Wallet } from 'lucide-react';
 import { PageLoader } from '@/components/PageLoader';
+import { PrivacyBadges } from '@/components/PrivacyBadges';
 import { useDashboardStats } from '@/hooks/useDashboardStats';
 import { useWedding } from '@/hooks/useWedding';
-import { PRIVACY_NOTE } from '@/utils/constants';
 import { formatCurrency } from '@/utils/currency';
 import { BackupReminder } from '@/features/export/BackupReminder';
 import { Countdown } from './Countdown';
@@ -93,10 +93,7 @@ export default function DashboardPage() {
         <QuickLinks />
       </div>
 
-      <p className={styles.privacy}>
-        <ShieldCheck aria-hidden size={16} />
-        {PRIVACY_NOTE}
-      </p>
+      <PrivacyBadges />
     </div>
   );
 }

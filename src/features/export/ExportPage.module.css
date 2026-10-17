@@ -195,3 +195,16 @@ input:focus-visible + .fileButton {
     align-items: start;
   }
 }
+
+.howTo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding-left: var(--space-5);
+  font-size: var(--text-sm);
+}
+
+.changeList {
+  margin-top: var(--space-2);
+  padding-left: var(--space-5);
+}

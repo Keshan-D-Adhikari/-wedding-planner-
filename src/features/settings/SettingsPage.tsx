@@ -8,6 +8,7 @@ import { Toast } from '@/components/Toast';
 import { useToast } from '@/hooks/useToast';
 import { useWedding } from '@/hooks/useWedding';
 import { APP_NAME, PRIVACY_NOTE } from '@/utils/constants';
+import { InstallCard } from './InstallCard';
 import { ResetDialog } from './ResetDialog';
 import styles from './SettingsPage.module.css';
 import { StorageStatus } from './StorageStatus';
@@ -44,6 +45,14 @@ export default function SettingsPage() {
             Pick the palette that matches your wedding. Your Pinterest cards use it too.
           </p>
           <ThemePicker />
+        </Card>
+
+        <Card as="section" aria-labelledby="install-heading">
+          <h2 id="install-heading" className={styles.sectionTitle}>
+            Install on your phone
+          </h2>
+          <p className={styles.sectionText}>Free, no app store, about 3 MB.</p>
+          <InstallCard />
         </Card>
 
         <Card as="section" aria-labelledby="data-heading">
