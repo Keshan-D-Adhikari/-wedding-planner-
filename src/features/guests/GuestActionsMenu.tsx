@@ -1,10 +1,20 @@
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
-import { Download, Ellipsis, FileSpreadsheet, ListPlus, Upload } from 'lucide-react';
+import {
+  ClipboardPaste,
+  Download,
+  Ellipsis,
+  FileSpreadsheet,
+  ListPlus,
+  MessageCircle,
+  Upload,
+} from 'lucide-react';
 import { Button } from '@/components/Button';
 import styles from './GuestActionsMenu.module.css';
 
 interface GuestActionsMenuProps {
   canExport: boolean;
+  onInvite: () => void;
+  onReplies: () => void;
   onBulkAdd: () => void;
   onImport: () => void;
   onExport: () => void;
@@ -17,6 +27,8 @@ interface GuestActionsMenuProps {
  */
 export function GuestActionsMenu({
   canExport,
+  onInvite,
+  onReplies,
   onBulkAdd,
   onImport,
   onExport,
@@ -31,6 +43,15 @@ export function GuestActionsMenu({
       </DropdownMenu.Trigger>
       <DropdownMenu.Portal>
         <DropdownMenu.Content className={styles.content} align="end" sideOffset={6}>
+          <DropdownMenu.Item className={styles.item} onSelect={onInvite}>
+            <MessageCircle aria-hidden size={18} />
+            Invite on WhatsApp
+          </DropdownMenu.Item>
+          <DropdownMenu.Item className={styles.item} onSelect={onReplies}>
+            <ClipboardPaste aria-hidden size={18} />
+            Paste RSVP replies
+          </DropdownMenu.Item>
+          <DropdownMenu.Separator className={styles.separator} />
           <DropdownMenu.Item className={styles.item} onSelect={onBulkAdd}>
             <ListPlus aria-hidden size={18} />
             Add many at once

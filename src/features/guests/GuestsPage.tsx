@@ -21,6 +21,8 @@ import { GuestFormDialog, type GuestDialogConfig } from './GuestFormDialog';
 import { GuestList } from './GuestList';
 import styles from './GuestsPage.module.css';
 import { GuestStats } from './GuestStats';
+import { PasteRepliesDialog } from './PasteRepliesDialog';
+import { WhatsAppInviteDialog } from './WhatsAppInviteDialog';
 import { GuestToolbar } from './GuestToolbar';
 import {
   computeGuestStats,
@@ -33,7 +35,7 @@ import {
 
 const CSV_MIME = 'text/csv;charset=utf-8';
 
-type DialogName = 'guest' | 'bulk' | 'import' | null;
+type DialogName = 'guest' | 'bulk' | 'import' | 'invite' | 'replies' | null;
 
 export default function GuestsPage() {
   const { wedding } = useWedding();
@@ -98,6 +100,8 @@ export default function GuestsPage() {
             </Button>
             <GuestActionsMenu
               canExport={guests.length > 0}
+              onInvite={() => show('invite')}
+              onReplies={() => show('replies')}
               onBulkAdd={() => show('bulk')}
               onImport={() => show('import')}
               onExport={() => void handleExport()}
@@ -199,6 +203,24 @@ export default function GuestsPage() {
           partners={partners}
           guests={guests}
           onAdded={added}
+        />
+      )}
+      {lastDialog === 'invite' && (
+        <WhatsAppInviteDialog
+          key={dialogKey}
+          open={openDialog === 'invite'}
+          onOpenChange={onOpenChange}
+          wedding={wedding}
+          guests={guests}
+        />
+      )}
+      {lastDialog === 'replies' && (
+        <PasteRepliesDialog
+          key={dialogKey}
+          open={openDialog === 'replies'}
+          onOpenChange={onOpenChange}
+          guests={guests}
+          onApplied={(message) => toast.show(message)}
         />
       )}
       {lastDialog === 'import' && (

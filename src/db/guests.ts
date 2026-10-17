@@ -35,3 +35,30 @@ export async function setGuestRsvp(id: string, rsvp: RsvpStatus): Promise<void> 
 export async function deleteGuest(id: string): Promise<void> {
   await db.guests.delete(id);
 }
+
+/** Remembers that an invite was sent, so the list can show who is still to be invited. */
+export async function markInvitesSent(ids: string[]): Promise<void> {
+  const now = Date.now();
+  await db.transaction('rw', db.guests, async () => {
+    for (const id of ids) await db.guests.update(id, { inviteSentAt: now });
+  });
+}
+
+export interface RsvpUpdate {
+  id: string;
+  rsvp: RsvpStatus;
+  /** Only ever turns a plus-one ON — a reply never removes one. */
+  plusOne?: boolean;
+}
+
+/** Applies many RSVP changes at once, all or nothing. */
+export async function applyRsvpUpdates(updates: RsvpUpdate[]): Promise<void> {
+  await db.transaction('rw', db.guests, async () => {
+    for (const update of updates) {
+      await updateGuest(update.id, {
+        rsvp: update.rsvp,
+        ...(update.plusOne ? { plusOne: true } : {}),
+      });
+    }
+  });
+}

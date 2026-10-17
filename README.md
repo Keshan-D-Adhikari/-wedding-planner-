@@ -10,17 +10,20 @@ your device** (IndexedDB in the browser), and the app works offline once it has 
 
 ## Features
 
-| Area           | What you can do                                                                                                  |
-| -------------- | ---------------------------------------------------------------------------------------------------------------- |
-| Onboarding     | 3 friendly steps (names → date & venue → budget, currency & theme); 62 starter tasks dated back from the wedding |
-| Dashboard      | Countdown, progress for every section, "up next" tasks, backup reminder                                          |
-| Checklist      | Tasks grouped by timeframe, collapsible, tick with animation, add/edit/delete, filters, overdue highlight        |
-| Budget         | Totals & over-budget warning, items by category, payments, donut + estimated-vs-actual charts                    |
-| Guest list     | Add, paste a whole list, CSV import/export, search & filters, quick RSVP, headcount incl. plus-ones              |
-| Seating chart  | Round/long tables on a floor plan, drag or tap to seat guests, capacity checks (plus-ones = 2 seats)             |
-| Export & share | 1000×1500 Pinterest cards, A4 PDFs (checklist, guests, seating, budget), JSON backup & restore                   |
-| Settings       | Edit details (optionally shifting task dates), theme, currency, storage status, delete all data                  |
-| Offline / PWA  | Installable on phones, works without internet, asks before updating to a new version                             |
+| Area           | What you can do                                                                                                       |
+| -------------- | --------------------------------------------------------------------------------------------------------------------- |
+| Onboarding     | 3 friendly steps (names → date & venue → budget, currency & theme); 62 starter tasks dated back from the wedding      |
+| Dashboard      | Countdown, progress for every section, "up next" tasks, backup reminder                                               |
+| Checklist      | Tasks grouped by timeframe, collapsible, tick with animation, add/edit/delete, filters, overdue highlight             |
+| Budget         | Totals & over-budget warning, items by category, payments, donut + estimated-vs-actual charts                         |
+| Guest list     | Add, paste a whole list, CSV import/export, search & filters, quick RSVP, headcount incl. plus-ones                   |
+| WhatsApp RSVPs | Personal invite links per guest (no server — you press Send), then paste the replies back to update RSVPs             |
+| Events         | Several celebrations (engagement, Poruwa, homecoming, Mehendi…) with Nakath/Muhurat times, per-event guests and costs |
+| Plan together  | Share your plan file with your partner; importing merges both copies (newest change wins)                             |
+| Seating chart  | Round/long tables on a floor plan, drag or tap to seat guests, capacity checks (plus-ones = 2 seats)                  |
+| Export & share | 1000×1500 Pinterest cards, A4 PDFs (checklist, guests, seating, budget), JSON backup & restore                        |
+| Settings       | Edit details (optionally shifting task dates), theme, currency, storage status, delete all data                       |
+| Offline / PWA  | Installable on phones, works without internet, asks before updating to a new version                                  |
 
 ## Tech stack
 

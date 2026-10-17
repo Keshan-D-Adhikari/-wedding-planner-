@@ -48,7 +48,7 @@
 
 .highlight .label,
 .highlight .hint {
-  color: color-mix(in srgb, var(--on-primary) 85%, transparent);
+  color: var(--on-primary);
 }
 
 @media (min-width: 760px) {

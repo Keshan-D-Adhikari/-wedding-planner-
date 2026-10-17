@@ -164,6 +164,7 @@ function parseGuest(r: Json): Guest {
     email: optStr(r.email, 200),
     tableId: optStr(r.tableId, 64) ?? null,
     eventIds: strList(r.eventIds),
+    inviteSentAt: stamp(r.inviteSentAt),
     updatedAt: stamp(r.updatedAt),
   };
 }

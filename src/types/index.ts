@@ -122,6 +122,8 @@ export interface Guest extends Timestamped {
   tableId?: string | null;
   /** Which events this guest is invited to. Missing = invited to every event. */
   eventIds?: string[];
+  /** When a WhatsApp invite was last sent to this guest (ms since 1970). */
+  inviteSentAt?: number;
 }
 
 export interface SeatingTable extends Timestamped {
