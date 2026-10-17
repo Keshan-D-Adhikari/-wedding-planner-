@@ -11,6 +11,7 @@ import {
   type MetaKey,
   type SeatingTable,
   type Wedding,
+  type WeddingEvent,
 } from '@/types';
 import { db, withOriginalTimestamps } from './db';
 
@@ -24,6 +25,8 @@ export interface BackupData {
   budgetItems: BudgetItem[];
   guests: Guest[];
   seatingTables: SeatingTable[];
+  /** Optional in older backup files. */
+  events: WeddingEvent[];
   meta: AppMeta[];
 }
 
@@ -37,19 +40,20 @@ export interface BackupFile {
 /* ---------- Export ---------- */
 
 export async function createBackup(): Promise<BackupFile> {
-  const [wedding, tasks, budgetItems, guests, seatingTables, meta] = await Promise.all([
+  const [wedding, tasks, budgetItems, guests, seatingTables, events, meta] = await Promise.all([
     db.wedding.toArray(),
     db.tasks.toArray(),
     db.budgetItems.toArray(),
     db.guests.toArray(),
     db.seatingTables.toArray(),
+    db.events.toArray(),
     db.meta.toArray(),
   ]);
   return {
     app: BACKUP_APP_ID,
     version: BACKUP_VERSION,
     exportedAt: new Date().toISOString(),
-    data: { wedding, tasks, budgetItems, guests, seatingTables, meta },
+    data: { wedding, tasks, budgetItems, guests, seatingTables, events, meta },
   };
 }
 
@@ -88,6 +92,13 @@ function num(v: unknown, field: string): number {
   return v;
 }
 const amount = (v: unknown, field: string) => Math.max(0, num(v, field));
+/** A list of short text ids (e.g. event ids), or undefined when empty/missing. */
+const strList = (v: unknown): string[] | undefined => {
+  if (!Array.isArray(v)) return undefined;
+  const ids = v.filter((x): x is string => typeof x === 'string').map((x) => x.slice(0, 64));
+  return ids.length > 0 ? ids : undefined;
+};
+
 /** A valid "last changed" time, or undefined (older backups don't have one). */ const stamp = (
   v: unknown,
 ) => (typeof v === 'number' && Number.isFinite(v) && v > 0 ? v : undefined);
@@ -134,6 +145,7 @@ function parseBudgetItem(r: Json): BudgetItem {
     vendorName: optStr(r.vendorName, 200),
     dueDate: optStr(r.dueDate, 10),
     notes: optStr(r.notes, 1000),
+    eventId: optStr(r.eventId, 64),
     updatedAt: stamp(r.updatedAt),
   };
 }
@@ -151,6 +163,21 @@ function parseGuest(r: Json): Guest {
     phone: optStr(r.phone, 60),
     email: optStr(r.email, 200),
     tableId: optStr(r.tableId, 64) ?? null,
+    eventIds: strList(r.eventIds),
+    updatedAt: stamp(r.updatedAt),
+  };
+}
+
+function parseEvent(r: Json): WeddingEvent {
+  return {
+    id: str(r.id, 'event id', 64),
+    name: str(r.name, 'event name', 100),
+    date: optStr(r.date, 10),
+    time: optStr(r.time, 5),
+    nakath: optStr(r.nakath, 5),
+    venue: optStr(r.venue, 200),
+    notes: optStr(r.notes, 1000),
+    order: typeof r.order === 'number' && Number.isFinite(r.order) ? r.order : 0,
     updatedAt: stamp(r.updatedAt),
   };
 }
@@ -211,11 +238,21 @@ export function parseBackup(text: string): BackupParseResult {
       budgetItems: list(d.budgetItems, parseBudgetItem),
       guests: list(d.guests, parseGuest),
       seatingTables: list(d.seatingTables, parseTable),
+      events: list(d.events, parseEvent),
       meta: list(d.meta, parseMeta).filter((m): m is AppMeta => m !== null),
     };
     if (data.wedding.length !== 1) {
       return { ok: false, message: 'This backup has no wedding details in it.' };
     }
+    // Drop links to events that aren't in the file.
+    const eventIds = new Set(data.events.map((e) => e.id));
+    data.guests = data.guests.map((g) => {
+      const kept = g.eventIds?.filter((id) => eventIds.has(id));
+      return { ...g, eventIds: kept && kept.length > 0 ? kept : undefined };
+    });
+    data.budgetItems = data.budgetItems.map((item) =>
+      item.eventId && !eventIds.has(item.eventId) ? { ...item, eventId: undefined } : item,
+    );
     // Drop seats that point at tables which aren't in the file.
     const tableIds = new Set(data.seatingTables.map((t) => t.id));
     data.guests = data.guests.map((g) =>
@@ -243,7 +280,7 @@ export async function restoreBackup(backup: BackupFile): Promise<void> {
   await withOriginalTimestamps(() =>
     db.transaction(
       'rw',
-      [db.wedding, db.tasks, db.budgetItems, db.guests, db.seatingTables, db.meta],
+      [db.wedding, db.tasks, db.budgetItems, db.guests, db.seatingTables, db.events, db.meta],
       async () => {
         await Promise.all([
           db.wedding.clear(),
@@ -258,6 +295,7 @@ export async function restoreBackup(backup: BackupFile): Promise<void> {
         await db.budgetItems.bulkAdd(data.budgetItems);
         await db.guests.bulkAdd(data.guests);
         await db.seatingTables.bulkAdd(data.seatingTables);
+        await db.events.bulkAdd(data.events);
         await db.meta.bulkAdd(data.meta);
         // The data now matches the backup, so it counts as backed up.
         await db.meta.put({

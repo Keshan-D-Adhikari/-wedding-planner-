@@ -7,7 +7,8 @@ import { SegmentedControl } from '@/components/SegmentedControl';
 import { TextField } from '@/components/TextField';
 import { ToggleField } from '@/components/ToggleField';
 import { addGuest, deleteGuest, updateGuest, type GuestInput } from '@/db/guests';
-import type { Guest, GuestSide, RsvpStatus } from '@/types';
+import type { Guest, GuestSide, RsvpStatus, WeddingEvent } from '@/types';
+import { EventInviteField } from './EventInviteField';
 import {
   DEFAULT_GROUPS,
   normalizeName,
@@ -25,6 +26,8 @@ interface GuestFormDialogProps {
   partners: Partners;
   /** All guests — for group/meal suggestions and the duplicate-name hint */
   guests: Guest[];
+  /** The wedding's events (sorted). When there are none, the invite picker is hidden. */
+  events: WeddingEvent[];
 }
 
 interface FormState {
@@ -37,11 +40,14 @@ interface FormState {
   dietary: string;
   phone: string;
   email: string;
+  /** Events the guest is invited to (all of them by default). */
+  eventIds: string[];
 }
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-function initialState(config: GuestDialogConfig): FormState {
+function initialState(config: GuestDialogConfig, events: WeddingEvent[]): FormState {
+  const allEvents = events.map((e) => e.id);
   if (config.mode === 'edit') {
     const g = config.guest;
     return {
@@ -54,6 +60,7 @@ function initialState(config: GuestDialogConfig): FormState {
       dietary: g.dietary ?? '',
       phone: g.phone ?? '',
       email: g.email ?? '',
+      eventIds: g.eventIds ?? allEvents,
     };
   }
   return {
@@ -66,6 +73,7 @@ function initialState(config: GuestDialogConfig): FormState {
     dietary: '',
     phone: '',
     email: '',
+    eventIds: allEvents,
   };
 }
 
@@ -79,11 +87,13 @@ export function GuestFormDialog({
   config,
   partners,
   guests,
+  events,
 }: GuestFormDialogProps) {
   const isEdit = config.mode === 'edit';
-  const [state, setState] = useState<FormState>(() => initialState(config));
+  const [state, setState] = useState<FormState>(() => initialState(config, events));
   const [nameError, setNameError] = useState<string>();
   const [emailError, setEmailError] = useState<string>();
+  const [eventError, setEventError] = useState<string>();
   const [confirmingDelete, setConfirmingDelete] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const groupListId = useId();
@@ -112,7 +122,10 @@ export function GuestFormDialog({
       email && !EMAIL_PATTERN.test(email) ? 'That email address looks incomplete.' : undefined;
     setNameError(nextNameError);
     setEmailError(nextEmailError);
-    if (nextNameError || nextEmailError) return;
+    const nextEventError =
+      events.length > 0 && state.eventIds.length === 0 ? 'Choose at least one event.' : undefined;
+    setEventError(nextEventError);
+    if (nextNameError || nextEmailError || nextEventError) return;
 
     const input: Omit<GuestInput, 'tableId'> = {
       name,
@@ -124,6 +137,9 @@ export function GuestFormDialog({
       dietary: state.dietary.trim() || undefined,
       phone: state.phone.trim() || undefined,
       email: email || undefined,
+      // Invited to every event is stored as "no list", so new events include them too.
+      eventIds:
+        events.length === 0 || state.eventIds.length === events.length ? undefined : state.eventIds,
     };
 
     setIsSaving(true);
@@ -207,6 +223,18 @@ export function GuestFormDialog({
         />
         {willLoseSeat && (
           <p className={form.hint}>They'll be removed from their table in the seating chart.</p>
+        )}
+
+        {events.length > 0 && (
+          <EventInviteField
+            events={events}
+            selected={state.eventIds}
+            onChange={(eventIds) => {
+              update({ eventIds });
+              setEventError(undefined);
+            }}
+            error={eventError}
+          />
         )}
 
         <ToggleField

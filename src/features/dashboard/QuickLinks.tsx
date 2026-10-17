@@ -6,6 +6,7 @@ import styles from './QuickLinks.module.css';
 
 const DESCRIPTIONS: Record<string, string> = {
   '/checklist': 'Every task, perfectly timed',
+  '/events': 'Engagement, ceremony, homecoming',
   '/budget': 'Track costs and payments',
   '/guests': 'Invites, RSVPs and meals',
   '/seating': 'Arrange tables and seats',

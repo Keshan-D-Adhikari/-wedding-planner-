@@ -1,0 +1,81 @@
+.field {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.legend {
+  margin-bottom: var(--space-2);
+  padding: 0;
+  font-size: var(--text-sm);
+  font-weight: 600;
+}
+
+.options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.option {
+  position: relative;
+}
+
+.input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  padding: 0 var(--space-4);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background: var(--surface);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition:
+    background-color var(--duration-fast) var(--ease-out),
+    border-color var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out);
+}
+
+.pill:hover {
+  border-color: color-mix(in srgb, var(--primary) 40%, var(--border));
+}
+
+/* A tick is added with CSS so the state isn't shown by colour alone */
+.input:checked + .pill {
+  border-color: var(--primary);
+  background: var(--primary-soft);
+  color: var(--primary);
+}
+
+.input:checked + .pill::before {
+  content: '✓';
+  margin-right: var(--space-1);
+  font-weight: 700;
+}
+
+.input:focus-visible + .pill {
+  box-shadow: var(--focus-ring);
+}
+
+.error {
+  margin-top: var(--space-2);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--danger);
+}
+
+@media (pointer: coarse) {
+  .pill {
+    min-height: var(--touch-target);
+  }
+}

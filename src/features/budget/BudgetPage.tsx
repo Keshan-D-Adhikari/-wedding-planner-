@@ -7,6 +7,7 @@ import { PageHeader } from '@/components/PageHeader';
 import { PageLoader } from '@/components/PageLoader';
 import { addBudgetItems } from '@/db/budget';
 import { db } from '@/db/db';
+import { sortEvents } from '@/features/events/eventUtils';
 import { useWedding } from '@/hooks/useWedding';
 import type { BudgetItem } from '@/types';
 import { BudgetItemDialog, type BudgetDialogConfig } from './BudgetItemDialog';
@@ -22,6 +23,7 @@ const BudgetCharts = lazy(() => import('./BudgetCharts'));
 export default function BudgetPage() {
   const { wedding } = useWedding();
   const items = useLiveQuery(() => db.budgetItems.toArray());
+  const events = useLiveQuery(() => db.events.toArray());
 
   // Dialogs keep their last config while animating closed; the key resets their form.
   const [itemDialogOpen, setItemDialogOpen] = useState(false);
@@ -32,7 +34,7 @@ export default function BudgetPage() {
 
   const groups = useMemo(() => summarizeByCategory(items ?? []), [items]);
 
-  if (!wedding || !items) return <PageLoader />;
+  if (!wedding || !items || !events) return <PageLoader />;
 
   const totals = computeTotals(items, wedding.totalBudget);
   const { currency } = wedding;
@@ -115,6 +117,7 @@ export default function BudgetPage() {
         onOpenChange={setItemDialogOpen}
         config={itemDialogConfig}
         currency={currency}
+        events={sortEvents(events)}
       />
       <TotalBudgetDialog
         key={`total-${totalDialogKey}`}

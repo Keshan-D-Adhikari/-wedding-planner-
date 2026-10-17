@@ -1,11 +1,14 @@
 import { useMemo, useState } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
-import { ListChecks, Plus, SearchX } from 'lucide-react';
+import { ListChecks, Plus, SearchX, Sparkles } from 'lucide-react';
 import { Button } from '@/components/Button';
 import { EmptyState } from '@/components/EmptyState';
 import { PageHeader } from '@/components/PageHeader';
 import { PageLoader } from '@/components/PageLoader';
+import { Toast } from '@/components/Toast';
 import { db } from '@/db/db';
+import { useToast } from '@/hooks/useToast';
+import { useWedding } from '@/hooks/useWedding';
 import type { ChecklistTask, Timeframe } from '@/types';
 import { isTaskOverdue } from '@/utils/tasks';
 import styles from './ChecklistPage.module.css';
@@ -19,11 +22,15 @@ import {
   type ChecklistFilters,
 } from './checklistUtils';
 import { TaskFormDialog, type TaskDialogConfig } from './TaskFormDialog';
+import { TaskPackDialog } from './TaskPackDialog';
 import { TimeframeSection } from './TimeframeSection';
 import { useCollapsedTimeframes } from './useCollapsedTimeframes';
 
 export default function ChecklistPage() {
+  const { wedding } = useWedding();
+  const toast = useToast();
   const tasks = useLiveQuery(() => db.tasks.toArray());
+  const [packOpen, setPackOpen] = useState(false);
   const [filters, setFilters] = useState<ChecklistFilters>(DEFAULT_FILTERS);
   const [showOverdueOnly, setShowOverdueOnly] = useState(false);
   const { collapsed, toggle } = useCollapsedTimeframes();
@@ -40,7 +47,7 @@ export default function ChecklistPage() {
     return groupByTimeframe(tasks, visible);
   }, [tasks, filters, showOverdueOnly]);
 
-  if (!tasks) return <PageLoader />;
+  if (!tasks || !wedding) return <PageLoader />;
 
   const done = tasks.filter((t) => t.completed).length;
   const overdue = tasks.filter(isTaskOverdue).length;
@@ -68,9 +75,18 @@ export default function ChecklistPage() {
         title="Checklist"
         subtitle="Every task, from engagement to the big day."
         actions={
-          <Button icon={<Plus aria-hidden />} onClick={() => openDialog({ mode: 'add' })}>
-            Add task
-          </Button>
+          <>
+            <Button icon={<Plus aria-hidden />} onClick={() => openDialog({ mode: 'add' })}>
+              Add task
+            </Button>
+            <Button
+              variant="secondary"
+              icon={<Sparkles aria-hidden />}
+              onClick={() => setPackOpen(true)}
+            >
+              Traditional tasks
+            </Button>
+          </>
         }
       />
 
@@ -143,6 +159,13 @@ export default function ChecklistPage() {
         onOpenChange={setDialogOpen}
         config={dialogConfig}
       />
+      <TaskPackDialog
+        open={packOpen}
+        onOpenChange={setPackOpen}
+        weddingDate={wedding.weddingDate}
+        onAdded={toast.show}
+      />
+      <Toast message={toast.message} onDismiss={toast.dismiss} />
     </>
   );
 }

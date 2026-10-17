@@ -5,7 +5,14 @@ import { db, withOriginalTimestamps } from './db';
 
 /** The tables shared between partners (app metadata like backup dates stays per-device). */
 type SyncedKey = Exclude<keyof BackupData, 'meta'>;
-const SYNCED: readonly SyncedKey[] = ['wedding', 'tasks', 'budgetItems', 'guests', 'seatingTables'];
+const SYNCED: readonly SyncedKey[] = [
+  'wedding',
+  'tasks',
+  'budgetItems',
+  'guests',
+  'seatingTables',
+  'events',
+];
 
 /** [one, many] names for each kind of record, for messages like "1 new guest". */
 export const SYNC_LABELS: Record<SyncedKey, [string, string]> = {
@@ -14,6 +21,7 @@ export const SYNC_LABELS: Record<SyncedKey, [string, string]> = {
   budgetItems: ['budget item', 'budget items'],
   guests: ['guest', 'guests'],
   seatingTables: ['table', 'tables'],
+  events: ['event', 'events'],
 };
 
 export type MergeCounts = Record<SyncedKey, { added: number; updated: number }>;

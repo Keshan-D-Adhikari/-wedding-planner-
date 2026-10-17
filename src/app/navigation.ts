@@ -1,5 +1,6 @@
 import {
   Armchair,
+  CalendarDays,
   House,
   ListChecks,
   Settings,
@@ -28,6 +29,7 @@ export const NAV_ITEMS: readonly NavItem[] = [
     icon: ListChecks,
     inBottomNav: true,
   },
+  { to: '/events', label: 'Events', shortLabel: 'Events', icon: CalendarDays, inBottomNav: false },
   { to: '/budget', label: 'Budget', shortLabel: 'Budget', icon: Wallet, inBottomNav: true },
   { to: '/guests', label: 'Guest list', shortLabel: 'Guests', icon: Users, inBottomNav: true },
   {

@@ -1,0 +1,36 @@
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+}
+
+.text {
+  min-width: 0;
+}
+
+.name {
+  font-size: var(--text-xl);
+}
+
+.description {
+  margin-top: 2px;
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}
+
+.count {
+  margin-top: var(--space-1);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  color: var(--primary);
+}

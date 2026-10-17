@@ -11,6 +11,7 @@ const BudgetPage = lazy(() => import('@/features/budget/BudgetPage'));
 const GuestsPage = lazy(() => import('@/features/guests/GuestsPage'));
 const SeatingPage = lazy(() => import('@/features/seating/SeatingPage'));
 const ExportPage = lazy(() => import('@/features/export/ExportPage'));
+const EventsPage = lazy(() => import('@/features/events/EventsPage'));
 const SettingsPage = lazy(() => import('@/features/settings/SettingsPage'));
 const OnboardingPage = lazy(() => import('@/features/onboarding/OnboardingPage'));
 const NotFoundPage = lazy(() => import('./NotFoundPage'));
@@ -85,6 +86,14 @@ export function AppRoutes() {
           element={
             <Page>
               <ExportPage />
+            </Page>
+          }
+        />
+        <Route
+          path="events"
+          element={
+            <Page>
+              <EventsPage />
             </Page>
           }
         />

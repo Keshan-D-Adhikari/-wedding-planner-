@@ -71,7 +71,7 @@ export async function updateWeddingDetails(
 export async function resetAllData(): Promise<void> {
   await db.transaction(
     'rw',
-    [db.wedding, db.tasks, db.budgetItems, db.guests, db.seatingTables, db.meta],
+    [db.wedding, db.tasks, db.budgetItems, db.guests, db.seatingTables, db.events, db.meta],
     async () => {
       await Promise.all([
         db.wedding.clear(),
@@ -79,6 +79,7 @@ export async function resetAllData(): Promise<void> {
         db.budgetItems.clear(),
         db.guests.clear(),
         db.seatingTables.clear(),
+        db.events.clear(),
         db.meta.clear(),
       ]);
     },

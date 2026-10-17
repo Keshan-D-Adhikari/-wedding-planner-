@@ -3,7 +3,7 @@ import { TIMEFRAMES, type ChecklistTask, type TaskCategory, type Timeframe } fro
 import { parseDate, toISODate } from '@/utils/date';
 import { createId } from '@/utils/id';
 
-interface TaskTemplate {
+export interface TaskTemplate {
   title: string;
   category: TaskCategory;
   notes?: string;
@@ -137,23 +137,29 @@ function scheduledDaysBefore(idealDaysBefore: number, daysAvailable: number): nu
 }
 
 /**
- * Builds the starter checklist (62 tasks) with due dates counted back from the wedding.
- * Dates never fall before today, so nothing is overdue on day one.
+ * Turns task templates into scheduled tasks with due dates counted back from the
+ * wedding. Dates never fall before today, so nothing is overdue on day one.
+ * `startOrder` lets an extra pack continue after the existing tasks.
  */
-export function buildDefaultTasks(weddingDate: string): ChecklistTask[] {
+export function scheduleTasks(
+  templates: Partial<Record<Timeframe, TaskTemplate[]>>,
+  weddingDate: string,
+  startOrder = 0,
+  isCustom = false,
+): ChecklistTask[] {
   const wedding = parseDate(weddingDate);
   if (!wedding) throw new Error(`Invalid wedding date: ${weddingDate}`);
 
   const today = startOfToday();
   const daysAvailable = differenceInCalendarDays(wedding, today);
-  let order = 0;
+  let order = startOrder;
 
   return TIMEFRAMES.flatMap((timeframe) => {
-    const templates = TEMPLATES[timeframe];
+    const group = templates[timeframe] ?? [];
     const [earliest, latest] = TIMEFRAME_WINDOWS[timeframe];
-    const step = templates.length > 1 ? (earliest - latest) / (templates.length - 1) : 0;
+    const step = group.length > 1 ? (earliest - latest) / (group.length - 1) : 0;
 
-    return templates.map((template, index): ChecklistTask => {
+    return group.map((template, index): ChecklistTask => {
       const idealDaysBefore = Math.round(earliest - step * index);
       const daysBefore = scheduledDaysBefore(idealDaysBefore, daysAvailable);
       const due = max([subDays(wedding, daysBefore), today]);
@@ -166,9 +172,14 @@ export function buildDefaultTasks(weddingDate: string): ChecklistTask[] {
         timeframe,
         dueDate: toISODate(due),
         completed: false,
-        isCustom: false,
+        isCustom,
         order: order++,
       };
     });
   });
+}
+
+/** Builds the starter checklist (62 tasks) for a new wedding. */
+export function buildDefaultTasks(weddingDate: string): ChecklistTask[] {
+  return scheduleTasks(TEMPLATES, weddingDate);
 }

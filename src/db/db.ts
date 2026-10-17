@@ -7,6 +7,7 @@ import type {
   SeatingTable,
   Timestamped,
   Wedding,
+  WeddingEvent,
 } from '@/types';
 
 export const DB_NAME = 'wedding-planner';
@@ -27,6 +28,7 @@ export class WeddingDatabase extends Dexie {
   budgetItems!: EntityTable<BudgetItem, 'id'>;
   guests!: EntityTable<Guest, 'id'>;
   seatingTables!: EntityTable<SeatingTable, 'id'>;
+  events!: EntityTable<WeddingEvent, 'id'>;
   meta!: EntityTable<AppMeta, 'key'>;
 
   constructor() {
@@ -39,6 +41,11 @@ export class WeddingDatabase extends Dexie {
       guests: 'id, name, side, rsvp, group, tableId',
       seatingTables: 'id',
       meta: 'key',
+    });
+
+    // v2: events (Poruwa, Homecoming, Mehendi…). Existing data is untouched.
+    this.version(2).stores({
+      events: 'id, order',
     });
   }
 }
@@ -72,6 +79,13 @@ function stampChanges(table: Table<Timestamped, string>) {
   });
 }
 
-for (const table of [db.wedding, db.tasks, db.budgetItems, db.guests, db.seatingTables]) {
+for (const table of [
+  db.wedding,
+  db.tasks,
+  db.budgetItems,
+  db.guests,
+  db.seatingTables,
+  db.events,
+]) {
   stampChanges(table);
 }

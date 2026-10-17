@@ -103,6 +103,8 @@ export interface BudgetItem extends Timestamped {
   /** ISO date */
   dueDate?: string;
   notes?: string;
+  /** The event this cost belongs to (e.g. the homecoming). Missing = general. */
+  eventId?: string;
 }
 
 export interface Guest extends Timestamped {
@@ -118,6 +120,8 @@ export interface Guest extends Timestamped {
   phone?: string;
   email?: string;
   tableId?: string | null;
+  /** Which events this guest is invited to. Missing = invited to every event. */
+  eventIds?: string[];
 }
 
 export interface SeatingTable extends Timestamped {
@@ -129,6 +133,22 @@ export interface SeatingTable extends Timestamped {
   /** Position on the floor plan */
   x: number;
   y: number;
+}
+
+/** One celebration within the wedding, e.g. Poruwa ceremony, Mehendi, Reception. */
+export interface WeddingEvent extends Timestamped {
+  id: string;
+  name: string;
+  /** ISO date */
+  date?: string;
+  /** Start time, "HH:mm" (24-hour) */
+  time?: string;
+  /** Auspicious time from the astrologer (Nakath / Muhurat), "HH:mm" */
+  nakath?: string;
+  venue?: string;
+  notes?: string;
+  /** Position in the list */
+  order: number;
 }
 
 /** Small key/value store for app-level metadata (e.g. last backup date). */

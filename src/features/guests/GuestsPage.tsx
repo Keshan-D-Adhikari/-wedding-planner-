@@ -12,6 +12,7 @@ import { useWedding } from '@/hooks/useWedding';
 import type { Guest } from '@/types';
 import { todayISO } from '@/utils/date';
 import { downloadFile } from '@/utils/download';
+import { sortEvents } from '@/features/events/eventUtils';
 import { BulkAddDialog } from './BulkAddDialog';
 import { CsvImportDialog } from './CsvImportDialog';
 import { GuestActionsMenu } from './GuestActionsMenu';
@@ -37,6 +38,7 @@ type DialogName = 'guest' | 'bulk' | 'import' | null;
 export default function GuestsPage() {
   const { wedding } = useWedding();
   const guests = useLiveQuery(() => db.guests.toArray());
+  const events = useLiveQuery(() => db.events.toArray());
   const [filters, setFilters] = useState<GuestFilters>(DEFAULT_GUEST_FILTERS);
   const toast = useToast();
 
@@ -51,7 +53,7 @@ export default function GuestsPage() {
   const stats = useMemo(() => computeGuestStats(guests ?? []), [guests]);
   const groups = useMemo(() => distinctGroups(guests ?? []), [guests]);
 
-  if (!wedding || !guests) return <PageLoader />;
+  if (!wedding || !guests || !events) return <PageLoader />;
 
   const partners = { partner1Name: wedding.partner1Name, partner2Name: wedding.partner2Name };
   const filtering = isFilteringGuests(filters);
@@ -186,6 +188,7 @@ export default function GuestsPage() {
           config={guestConfig}
           partners={partners}
           guests={guests}
+          events={sortEvents(events)}
         />
       )}
       {lastDialog === 'bulk' && (

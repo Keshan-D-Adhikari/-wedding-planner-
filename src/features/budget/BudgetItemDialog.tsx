@@ -11,7 +11,7 @@ import {
   updateBudgetItem,
   type BudgetItemInput,
 } from '@/db/budget';
-import { BUDGET_CATEGORIES, type BudgetItem, type CurrencyCode } from '@/types';
+import { BUDGET_CATEGORIES, type BudgetItem, type CurrencyCode, type WeddingEvent } from '@/types';
 import { formatCurrency } from '@/utils/currency';
 import { parseDate } from '@/utils/date';
 import { amountToInput, parseAmount } from '@/utils/number';
@@ -25,6 +25,8 @@ interface BudgetItemDialogProps {
   onOpenChange: (open: boolean) => void;
   config: BudgetDialogConfig;
   currency: CurrencyCode;
+  /** The wedding's events (sorted). When there are none, the Event picker is hidden. */
+  events: WeddingEvent[];
 }
 
 interface FormState {
@@ -36,6 +38,8 @@ interface FormState {
   vendorName: string;
   dueDate: string;
   notes: string;
+  /** Event id, or "" for a general cost */
+  eventId: string;
 }
 
 type FormErrors = Partial<Record<keyof FormState, string>>;
@@ -52,6 +56,7 @@ function initialState(config: BudgetDialogConfig): FormState {
       vendorName: item.vendorName ?? '',
       dueDate: item.dueDate ?? '',
       notes: item.notes ?? '',
+      eventId: item.eventId ?? '',
     };
   }
   return {
@@ -63,6 +68,7 @@ function initialState(config: BudgetDialogConfig): FormState {
     vendorName: '',
     dueDate: '',
     notes: '',
+    eventId: '',
   };
 }
 
@@ -79,7 +85,13 @@ function validate(form: FormState): FormErrors {
 }
 
 /** Add / edit / delete a budget item. Given a fresh `key` each time it opens. */
-export function BudgetItemDialog({ open, onOpenChange, config, currency }: BudgetItemDialogProps) {
+export function BudgetItemDialog({
+  open,
+  onOpenChange,
+  config,
+  currency,
+  events,
+}: BudgetItemDialogProps) {
   const isEdit = config.mode === 'edit';
   const [form, setForm] = useState<FormState>(() => initialState(config));
   const [errors, setErrors] = useState<FormErrors>({});
@@ -115,6 +127,8 @@ export function BudgetItemDialog({ open, onOpenChange, config, currency }: Budge
       vendorName: form.vendorName.trim() || undefined,
       dueDate: form.dueDate || undefined,
       notes: form.notes.trim() || undefined,
+      // Only keep the link if that event still exists.
+      eventId: events.some((e) => e.id === form.eventId) ? form.eventId : undefined,
     };
 
     setIsSaving(true);
@@ -192,6 +206,22 @@ export function BudgetItemDialog({ open, onOpenChange, config, currency }: Budge
             ))}
           </SelectField>
         </div>
+
+        {events.length > 0 && (
+          <SelectField
+            label="Event (optional)"
+            hint="Tie this cost to one celebration to see each event's total cost."
+            value={form.eventId}
+            onChange={(e) => update('eventId', e.target.value)}
+          >
+            <option value="">General — not tied to an event</option>
+            {events.map((event) => (
+              <option key={event.id} value={event.id}>
+                {event.name}
+              </option>
+            ))}
+          </SelectField>
+        )}
 
         <fieldset className={styles.amounts}>
           <legend className={styles.legend}>Amounts ({currency})</legend>
