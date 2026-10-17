@@ -94,12 +94,23 @@ Six colour themes live in `src/styles/themes.css` and are switched with
 such as `var(--primary)`, so they adapt to every theme automatically. Primary colours meet WCAG AA
 contrast for white text.
 
-## Deploying to GitHub Pages
+## Deploying to Netlify (recommended)
+
+1. Go to https://app.netlify.com → **Add new site → Import an existing project → GitHub**, and choose this repository.
+2. Leave the settings as they are — `netlify.toml` already sets the build command, the `dist` folder and the Node version — and click **Deploy**.
+3. In about a minute you get a link like `https://random-name.netlify.app`. Change it under **Site configuration → Change site name**.
+4. Every push to `main` now redeploys automatically. No environment variables are needed.
+
+Custom domain: **Domain management → Add a domain**, then follow the DNS steps Netlify shows.
+
+## Alternative: GitHub Pages
+
+The Pages workflow (`.github/workflows/deploy.yml`) is manual-only now: enable it with the steps below, then run it from the **Actions** tab.
 
 1. Create a GitHub repository and push this project to the `main` branch.
 2. In the repo go to **Settings → Pages → Build and deployment → Source** and choose
    **GitHub Actions**.
-3. Every push to `main` runs `.github/workflows/deploy.yml`, which lints, builds and deploys.
+3. Run **Actions → Deploy to GitHub Pages → Run workflow**. It lints, builds and deploys.
    Your site appears at `https://<username>.github.io/<repo-name>/`.
 
 The workflow sets Vite's `base` path and the public site URL (used for social-preview images)

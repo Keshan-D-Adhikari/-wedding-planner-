@@ -1,9 +1,9 @@
 name: Deploy to GitHub Pages
 
+# The site is hosted on Netlify (see netlify.toml), which deploys by itself on every push.
+# This GitHub Pages deploy is kept as a manual alternative: enable Settings → Pages →
+# Source: GitHub Actions, then run it from the Actions tab.
 on:
-  push:
-    branches: [main]
-  # Lets you run the deploy manually from the Actions tab
   workflow_dispatch:
 
 # Minimum permissions needed to publish to GitHub Pages

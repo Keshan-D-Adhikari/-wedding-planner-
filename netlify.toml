@@ -1,0 +1,9 @@
+# Netlify build settings. Connect the GitHub repo in Netlify and it deploys on every push.
+[build]
+  # URL is provided by Netlify (e.g. https://my-wedding-planner.netlify.app). It is used for
+  # social-preview image links, so it must end with a slash.
+  command = "VITE_SITE_URL=\"$URL/\" npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "22"

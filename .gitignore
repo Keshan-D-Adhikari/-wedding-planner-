@@ -20,3 +20,7 @@ Thumbs.db
 # Put anything private in .env.local (never committed).
 .env.local
 .env.*.local
+
+# Local research notes and reports (not part of the app)
+research_notes
+reports
